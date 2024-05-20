@@ -1,0 +1,215 @@
+.Main {
+  position: absolute;
+  left: 15%;
+  width: 85%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0 2em;
+  transition-duration: 500ms;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+
+  &::-webkit-scrollbar {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+  }
+
+
+  &[data-view-state="full"] {
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  #top {
+    padding-top: 2em;
+    top: 0;
+    position: sticky;
+    background-color: white;
+    z-index: 2000;
+  }
+
+  hgroup {
+    h1 {
+      font-size: 6em;
+      font-weight: 200;
+      user-select: none;
+    }
+  }
+
+  header {
+    #sidebar-toggle-button {
+      border: 0px;
+      background-color: transparent;
+      position: relative;
+      cursor: pointer;
+      padding: 0px;
+      height: 2.5em;
+      width: 2.5em;
+      outline: none;
+      transition: {
+        property: filter;
+        duration: $animation-duration
+      }
+
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        user-select: none;
+        -webkit-user-drag: none;
+      }
+
+      &:hover,
+      &:focus-visible {
+        filter: brightness(0.8);
+      }
+    }
+  }
+
+  hgroup {
+    #playlist-create-button {
+      border: 1px solid black;
+      border-radius: 1em;
+      height: 2em;
+      background-color: transparent;
+      padding: 0 0.5em;
+      color: black;
+      outline: none;
+      transition-property: background-color;
+      transition-duration: calc($animation-duration);
+
+      &:hover,
+      &:focus-visible {
+        background-color: #eee;
+      }
+    }
+  }
+
+  #playlist-container {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0 5%;
+    box-sizing: border-box;
+    padding-bottom: 8em;
+
+    & > #empty-playlist-placeholder:only-child{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .playlist {
+      min-width: 0;
+      border: 1px solid black;
+      box-sizing: border-box;
+      margin-bottom: 1em;
+      border-radius: 1em;
+      word-break: break-all;
+      
+      section {
+        padding: 1em;
+
+        h2 {
+          font-size: 0.85em;
+          margin: 0;
+          overflow: hidden;
+          text-wrap: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+
+      svg {
+        user-select: none;
+        position: relative;
+        aspect-ratio: 1/1;
+        width: 100%;
+        border-radius: 1em;
+        border-bottom: 1px solid black;
+      }
+    }
+  }
+}
+
+#playlist-create-dialog {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  transition: {
+    property: opacity;
+    duration: calc($animation-duration / 1.5);
+  }
+  z-index: 8000;
+
+  #dialog-closer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #00000080;
+    cursor: pointer;
+    z-index: 8000;
+  }
+
+  #dialog {
+    user-select: none;
+    background-color: white;
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9000;
+    box-sizing: border-box;
+    padding: 2em;
+    border-radius: 2em;
+
+    h2 {
+      font-weight: 300;
+      font-size: 2em;
+    }
+
+    #playlist-name-input {
+      border: 0px;
+      font-size: 3em;
+      outline: none;
+      padding: 0px;
+      margin: 0.5em 0;
+      overflow: auto;
+      text-overflow: ellipsis;
+      position: relative;
+      width: 80%;
+      display: block;
+    }
+
+    #create-playlist-button {
+      background-color: transparent;
+      border: 1px solid black;
+      height: 2em;
+      border-radius: 1em;
+      outline: none;
+      padding: 0 0.5em;
+      box-sizing: border-box;
+      transition-property: background-color;
+      transition-duration: $animation-duration;
+
+      &:hover,
+      &:focus-visible {
+        background-color: #eeeeee;
+      }
+    }
+  }
+
+  &[data-visible="hidden"] {
+    opacity: 0;
+    pointer-events: none;
+  }
+}

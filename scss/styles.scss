@@ -1,0 +1,39 @@
+@font-face {
+  font-family: nunito;
+  font-display: swap;
+  src: url(./public/fonts/Nunito.ttf);
+}
+
+body {
+  font-family: nunito;
+  font-size: 20px;
+  margin: 0px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0px;
+}
+
+button,
+input {
+  font-family: nunito;
+  font-size: 1em;
+}
+
+input::placeholder {
+  user-select: none;
+}
+
+button {
+  cursor: pointer;
+  user-select: none
+}
+
+@import "variables.scss";
+@import "components/Main.scss";
+@import "components/Sidebar.scss";
