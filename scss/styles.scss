@@ -35,5 +35,6 @@ button {
 }
 
 @import "variables.scss";
+@import "components/ErrorView.scss"; 
 @import "components/Main.scss";
 @import "components/Sidebar.scss";

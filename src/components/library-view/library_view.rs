@@ -1,24 +1,34 @@
+use std::fmt::Debug;
 use leptos::{html::Input, *};
 use web_sys::MouseEvent;
-mod playlist;
+use crate::components::main_view::*;
 
-#[derive(Clone)]
-struct PlaylistItem {
-  name: String,
-  id: u32,
-}
+mod playlist;
 
 /// Represents the main component presenting the playlists and the songs
 #[component]
-pub fn MainView(set_sidebar_state: WriteSignal<bool>) -> impl IntoView {
-  let (playlist_items, set_playlist_items) = create_signal::<Vec<PlaylistItem>>(vec![]);
+pub fn LibraryView(
+  set_sidebar_state: WriteSignal<bool>,
+  set_playlist_items: WriteSignal<Vec<PlaylistItem>>,
+) -> impl IntoView {
   let (playlist_dialog_state, set_playlist_dialog_state) = create_signal(false);
   let playlist_title_noderef = NodeRef::<Input>::new();
+
+  /* Handles all the songs contained in playlists */
+  let playlist_items: ReadSignal<Vec<PlaylistItem>> = {
+    if let Some(items) = use_context::<ReadSignal<Vec<PlaylistItem>>>() {
+      items
+    } else {
+      context_val_not_provided("playlist_items")
+    }
+  };
+
+  /* Handles the state of the sidebar */
   let sidebar_state: ReadSignal<bool> = {
     if let Some(state) = use_context::<ReadSignal<bool>>() {
       state
     } else {
-      panic!("The sidebar_state state attribute was not defined")
+      context_val_not_provided("sidebar_state")
     }
   };
 
@@ -34,10 +44,10 @@ pub fn MainView(set_sidebar_state: WriteSignal<bool>) -> impl IntoView {
       }>
       <div id="top">
         <header>
-          <button id="sidebar-toggle-button" on:click=move |_:MouseEvent| {
+          <button id="sidebar-toggle-button" on:click= move |_:MouseEvent| {
             set_sidebar_state.update(|current_state| *current_state = !(*current_state));
           }>
-          <img alt="toggle navigation state" src=move || {
+          <img alt="toggle navigation state" src= move || {
             let panelName = |icon: &str| format!("./public/svg/{}_panel_left.svg", icon);
             panelName(if sidebar_state.get(){
               "close"
@@ -49,7 +59,7 @@ pub fn MainView(set_sidebar_state: WriteSignal<bool>) -> impl IntoView {
         </header>
         <hgroup>
           <h1>"Library"</h1>
-          <button id="playlist-create-button" on:click=move|_| {
+          <button id="playlist-create-button" on:click= move|_| {
             set_playlist_dialog_state.update(|state| *state = true)
           }>
             "Create playlist"
@@ -58,7 +68,7 @@ pub fn MainView(set_sidebar_state: WriteSignal<bool>) -> impl IntoView {
         </hgroup>
       </div>
       <div id="playlist-container">
-        <Show when=move|| playlist_items.get().is_empty()>
+        <Show when= move|| playlist_items.get().is_empty()>
           <div id="empty-playlist-placeholder">"No playlists found"</div>
         </Show>
         <For
@@ -66,7 +76,7 @@ pub fn MainView(set_sidebar_state: WriteSignal<bool>) -> impl IntoView {
           key=move|playlist_items| playlist_items.id
           children=move |item:PlaylistItem| {
             let PlaylistComponent = playlist::Playlist;
-            let name = item.name; 
+            let name = item.name;
             view!{
               <PlaylistComponent name={name}/>
             }
@@ -74,14 +84,15 @@ pub fn MainView(set_sidebar_state: WriteSignal<bool>) -> impl IntoView {
         />
       </div>
     </main>
-    <div id="playlist-create-dialog" data-visible=move|| {
+
+    <div id="playlist-create-dialog" data-visible= move|| {
       if playlist_dialog_state.get(){
         "visible"
-      } else{
+      } else {
         "hidden"
       }
     }>
-      <div id="dialog-closer" on:click=move|_| {
+      <div id="dialog-closer" on:click= move|_| {
         set_playlist_dialog_state.update(|state| *state = false)
       }></div>
       <div id="dialog">
@@ -111,4 +122,8 @@ pub fn MainView(set_sidebar_state: WriteSignal<bool>) -> impl IntoView {
       </div>
     </div>
   }
+}
+
+fn context_val_not_provided(value_name: impl Debug) -> ! {
+  panic!("The \"{:?}\" context value was not porovided", value_name);
 }
